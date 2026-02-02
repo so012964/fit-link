@@ -1,14 +1,3 @@
-# ============================================================
-# 職務経歴書 × 求人票 マッチング診断アプリ（UI改善版 v4）
-# ------------------------------------------------------------
-# ✅ v4 変更点：
-# - STEP④「対話で素材確定」→「書き足す内容を整理」に表現変更
-# - STEP⑤「追記文作成」→「書き足す文章を作成」に表現変更
-# - STEP⑤の前に「書き足す対象の確認」UI追加（チェックボックス）
-# - 「振り返りポイント」→「書き足せるポイント」に変更
-# - 「追記」の初出時に「職務経歴書に書き足す」と明示
-# ============================================================
-
 import os
 import json
 import re
@@ -28,9 +17,16 @@ import fitz  # PyMuPDF
 load_dotenv()
 
 st.set_page_config(
-    page_title="職務経歴書 マッチング診断",
+    page_title="Fit Link",
     layout="wide",
 )
+
+# パスワード認証（Secretsに設定されている場合のみ）
+if "APP_PASSWORD" in st.secrets:
+    password = st.text_input("パスワードを入力してください", type="password")
+    if password != st.secrets["APP_PASSWORD"]:
+        st.warning("パスワードを知っている人だけが利用できます。")
+        st.stop()
 
 # キャプションの文字サイズを調整
 st.markdown("""
