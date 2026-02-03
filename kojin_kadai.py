@@ -23,9 +23,16 @@ st.set_page_config(
 
 # パスワード認証（Secretsに設定されている場合のみ）
 if "APP_PASSWORD" in st.secrets:
-    password = st.text_input("パスワードを入力してください", type="password")
-    if password != st.secrets["APP_PASSWORD"]:
-        st.warning("パスワードを知っている人だけが利用できます。")
+    if not st.session_state.get("authenticated"):
+        st.markdown("### 🔐 認証")
+        col_pw, _ = st.columns([1, 2])
+        with col_pw:
+            password = st.text_input("パスワード", type="password", label_visibility="collapsed", placeholder="パスワードを入力")
+            if password == st.secrets["APP_PASSWORD"]:
+                st.session_state["authenticated"] = True
+                st.rerun()
+            elif password:
+                st.error("パスワードが正しくありません。")
         st.stop()
 
 # キャプションの文字サイズを調整
